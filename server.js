@@ -30,7 +30,8 @@ app.post('/usuarios', async (req, res) => {
   }
 });
 
-app.put('/usuarios,/:id', async (req, res) => {
+app.put('/usuarios/:id', async (req, res) => {
+
 
     const user = await prisma.user.update({
         where:{
