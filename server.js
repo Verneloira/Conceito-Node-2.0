@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import { PrismaClient } from '@prisma/client'
+import { ObjectId } from 'mongodb';
+
 
 const prisma = new PrismaClient()
 
@@ -46,15 +48,22 @@ app.put('/usuarios/:id', async (req, res) => {
     res.status(200).json(user)
 })
 app.delete('/usuarios/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
 
-     await prisma.user.delete({
-        where:{
-            id: req.params.id
-        }
-        
-    })
-    res.status(200).json({message: "usuario deletado com sucesso"})
-})
+    await prisma.user.delete({
+      where: {
+        id: new ObjectId(id) 
+      }
+    });
+
+    res.status(200).json({ message: "Usuário deletado com sucesso" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erro ao deletar usuário", error });
+  }
+});
 
 app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000');
